@@ -1,6 +1,6 @@
 import Authentication from "@/components/AuthenticationForm";
 import { initFirebase } from "@/firebase/Authentication";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -8,12 +8,17 @@ import {
 } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
-
+import UserAuthContext from "@/store/user-auth";
 function HomePage() {
   const [clicked, setClicked] = useState(false);
   const auth = getAuth();
   const [user, loading] = useAuthState(auth);
   const router = useRouter();
+  const userAuthCtx = useContext(UserAuthContext);
+
+  if (!userAuthCtx) {
+    throw new Error("UserAuthContext not found");
+  }
 
   if (loading) {
     return <div>Loading...</div>;
@@ -34,18 +39,25 @@ function HomePage() {
 
   const onSubmitHandler = (email: string, password: string) => {
     if (clicked) {
-      createUserWithEmailAndPassword(auth, email, password).then(
-        (userCredential) => {
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
           const user = userCredential.user;
-        }
-      );
+          userAuthCtx.setLoggedIn();
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+        });
     } else {
-      signInWithEmailAndPassword(auth, email, password).then(
-        (userCredential) => {
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
           const user = userCredential.user;
-          console.log(user.uid);
-        }
-      );
+          userAuthCtx.setLoggedIn();
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+        });
     }
   };
 
