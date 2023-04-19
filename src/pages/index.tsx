@@ -22,7 +22,7 @@ function HomePage() {
   }
 
   if (userAuthCtx.loggedIn) {
-    router.push("/characters");
+    router.push("/characters/1");
   }
 
   const onClickHandler = () => {

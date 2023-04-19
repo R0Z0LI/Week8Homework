@@ -8,7 +8,7 @@ const PeopleItem: React.FC<{
 }> = (props) => {
   const router = useRouter();
   const onClickHandler = () => {
-    router.push(`/characters/${props.id}`);
+    router.push(`/characters/details/${props.id}`);
   };
   return (
     <li onClick={onClickHandler}>
