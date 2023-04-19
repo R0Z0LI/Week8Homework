@@ -1,6 +1,6 @@
 import Authentication from "@/components/AuthenticationForm";
 import { initFirebase } from "@/firebase/Authentication";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -10,6 +10,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
 import UserAuthContext from "@/store/user-auth";
 function HomePage() {
+  const app = initFirebase();
   const [clicked, setClicked] = useState(false);
   const auth = getAuth();
   const [user, loading] = useAuthState(auth);
@@ -20,13 +21,8 @@ function HomePage() {
     throw new Error("UserAuthContext not found");
   }
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (user) {
+  if (userAuthCtx.loggedIn) {
     router.push("/characters");
-    return <div>Welcome {user.displayName}</div>;
   }
 
   const onClickHandler = () => {
@@ -42,7 +38,7 @@ function HomePage() {
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           const user = userCredential.user;
-          userAuthCtx.setLoggedIn();
+          //userAuthCtx.setLoggedIn(true);
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -52,7 +48,7 @@ function HomePage() {
       signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           const user = userCredential.user;
-          userAuthCtx.setLoggedIn();
+          userAuthCtx.setLoggedIn(true);
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -61,12 +57,11 @@ function HomePage() {
     }
   };
 
-  const app = initFirebase();
   return (
     <div>
       {clicked ? <p>Register</p> : <p>Sign in</p>}
       <Authentication onSubmit={onSubmitHandler} />
-
+      {loading && <div>Loading...</div>}
       {clicked && <button onClick={onClickHandler}>Sign In</button>}
       {!clicked && <button onClick={onClickHandler}>Create Account</button>}
     </div>

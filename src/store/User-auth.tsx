@@ -4,7 +4,7 @@ interface Props {
 }
 type UserAuthObj = {
   loggedIn: boolean;
-  setLoggedIn: () => void;
+  setLoggedIn: (loggedIn: boolean) => void;
 };
 const UserAuthContext = React.createContext<UserAuthObj>({
   loggedIn: false,
@@ -12,12 +12,8 @@ const UserAuthContext = React.createContext<UserAuthObj>({
 });
 export const UserAuthContextProvider: React.FC<Props> = (props) => {
   const [loggedIn, setLoggedIn] = useState(false);
-  const setLoggedInHandler = () => {
-    if (loggedIn) {
-      setLoggedIn(false);
-    } else {
-      setLoggedIn(true);
-    }
+  const setLoggedInHandler = (loggedIn: boolean) => {
+    setLoggedIn(loggedIn);
   };
   const contextValue: UserAuthObj = {
     loggedIn: loggedIn,
