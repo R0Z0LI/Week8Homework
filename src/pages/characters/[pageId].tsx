@@ -30,15 +30,14 @@ interface Person {
 }
 
 interface Context {
-  params: {
-    page: number;
+  query: {
+    pageId: string;
   };
 }
 
 export const getServerSideProps = async (context: Context) => {
-  console.log("page", context.params.page);
-  const page = context.params || "1";
-  const res = await fetch(`https://swapi.dev/api/people/?page=1`);
+  const { pageId } = context.query;
+  const res = await fetch(`https://swapi.dev/api/people/?page=${pageId}`);
   const data = await res.json();
   const people = await data.results.map(
     (person: PeopleData, index: number) => ({
@@ -51,7 +50,7 @@ export const getServerSideProps = async (context: Context) => {
   return {
     props: {
       people: JSON.parse(JSON.stringify(people)),
-      page: Number(page),
+      pageId: Number(pageId),
     },
   };
   revalidate: 1;
@@ -59,21 +58,21 @@ export const getServerSideProps = async (context: Context) => {
 
 function CharactersPage({
   people,
-  page,
+  pageId,
 }: {
   people: PeopleData[];
-  page: number;
+  pageId: number;
 }) {
   const app = initFirebase();
   const auth = getAuth();
-  const [currentPage, setCurrentPage] = useState(page);
+  const [currentPage, setCurrentPage] = useState(pageId);
   const [user, loading] = useAuthState(auth);
   const router = useRouter();
   const userAuthCtx = useContext(UserAuthContext);
 
   const onChange = (event: ChangeEvent<unknown>, page: number) => {
     setCurrentPage(page);
-    router.push(`/characters/?page=${page}`);
+    router.push(`/characters/${page}`);
   };
 
   const onSignOutHandler = () => {
@@ -89,9 +88,9 @@ function CharactersPage({
 
   return (
     <div>
-      <PeopleList items={people} />
+      {people && <PeopleList items={people} />}
       {loading && <div>Loading...</div>}
-      <Pagination count={10} page={currentPage} onChange={onChange} />
+      <Pagination count={10} page={pageId} onChange={onChange} />
       <button onClick={onSignOutHandler}>Sign out</button>
     </div>
   );
