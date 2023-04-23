@@ -22,8 +22,8 @@ const PeopleList: React.FC<{ items: PeopleData[] }> = (props) => {
   return (
     <div>
       <SearcPeople items={props.items} onSearch={handleSearch} />
-      <div>
-        <ul>
+      <div className="p-2">
+        <ul className="border-2 border-black">
           <OrderPeople
             items={filteredPeople}
             onOrderChange={onOrderChangeHandler}

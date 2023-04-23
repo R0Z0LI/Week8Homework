@@ -13,7 +13,7 @@ function HomePage() {
   const app = initFirebase();
   const [clicked, setClicked] = useState(false);
   const auth = getAuth();
-  const [user, loading] = useAuthState(auth);
+  const [loading, setLoading] = useState(false);
   const [successfulRegistration, setSuccessfulRegistration] = useState(false);
   const router = useRouter();
   const userAuthCtx = useContext(UserAuthContext);
@@ -22,9 +22,12 @@ function HomePage() {
     throw new Error("UserAuthContext not found");
   }
 
-  if (userAuthCtx.loggedIn) {
-    router.push("/characters/1");
-  }
+  useEffect(() => {
+    if (userAuthCtx.loggedIn) {
+      router.push("/characters/1");
+      setLoading(true);
+    }
+  }, [userAuthCtx.loggedIn]);
 
   const onClickHandler = () => {
     if (clicked) {
@@ -64,18 +67,22 @@ function HomePage() {
 
   return (
     <div>
-      <div className="pt-3 pl-4">
-        {clicked ? <p>Registration</p> : <p>Signing in</p>}
-      </div>
-      <Authentication onSubmit={onSubmitHandler} />
-      {successfulRegistration && (
+      {!loading && (
+        <div className="pt-3 pl-4">
+          {clicked ? <p>Registration</p> : <p>Signing in</p>}
+        </div>
+      )}
+      {!loading && <Authentication onSubmit={onSubmitHandler} />}
+      {successfulRegistration && !loading && (
         <p className="pl-4 p-1 text-red-600">Successful Registration</p>
       )}
-      {loading && <div>Loading...</div>}
-      <div className="w-fit inline-block border-2 border-black rounded-lg ml-4 p-1 active:bg-sky-200">
-        {clicked && <button onClick={onClickHandler}>Sign In</button>}
-        {!clicked && <button onClick={onClickHandler}>Create Account</button>}
-      </div>
+      {loading && <div className="p-2">Loading...</div>}
+      {!loading && (
+        <div className="w-fit inline-block border-2 border-black rounded-lg ml-4 p-1 active:bg-sky-200">
+          {clicked && <button onClick={onClickHandler}>Sign In</button>}
+          {!clicked && <button onClick={onClickHandler}>Create Account</button>}
+        </div>
+      )}
     </div>
   );
 }

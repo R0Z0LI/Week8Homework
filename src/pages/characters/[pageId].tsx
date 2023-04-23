@@ -77,7 +77,12 @@ function CharactersPage({
 
   return (
     <div>
-      <button onClick={onSignOutHandler}>Sign out</button>
+      <button
+        className="m-2 w-fit inline-block border-2 border-black rounded-lg ml-4 p-1 active:bg-sky-200"
+        onClick={onSignOutHandler}
+      >
+        Sign out
+      </button>
       {people && <PeopleList items={people} />}
       {loading && <div>Loading...</div>}
       <Pagination

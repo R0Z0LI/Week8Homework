@@ -37,7 +37,7 @@ const SearcPeople: React.FC<{
       <input
         type="text"
         placeholder="Search.."
-        className="py-2 pl-8 pr-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        className="py-2 pl-2 ml-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         onChange={onChangeHandler}
       />
     </div>

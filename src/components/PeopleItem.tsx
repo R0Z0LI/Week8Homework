@@ -13,7 +13,10 @@ const PeopleItem: React.FC<{
     router.push(`/characters/details/${props.id}`);
   };
   return (
-    <li className="p-3 grid gap-4 grid-cols-6" onClick={onClickHandler}>
+    <li
+      className="p-3 grid gap-4 grid-cols-6 border-2 border-black"
+      onClick={onClickHandler}
+    >
       <span className="p-1 pr-10 text-">{props.id} </span>
       <span className="p-1 w-40">{props.name} </span>
       <span className="p-1 w-20">{props.gender} </span>
