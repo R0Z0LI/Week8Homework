@@ -21,11 +21,50 @@ const OrderPeople: React.FC<{
   const handleSortClick = (field: string) => {
     if (sortField == field) {
       setSortDirection(sortDirection === "asc" ? "desc" : "asc");
-      setArrow(field);
     } else {
       setSortField(field as SortField);
       setSortDirection("asc");
-      setArrow(field);
+    }
+    setArrow(field);
+  };
+
+  const setBackTheRest = (field: string) => {
+    if (field === "id") {
+      setNameField(false);
+      setGenderField(false);
+      setBirthField(false);
+      setMassField(false);
+      setHeightField(false);
+    } else if (field === "name") {
+      setIdField(false);
+      setGenderField(false);
+      setBirthField(false);
+      setMassField(false);
+      setHeightField(false);
+    } else if (field === "gender") {
+      setNameField(false);
+      setIdField(false);
+      setBirthField(false);
+      setMassField(false);
+      setHeightField(false);
+    } else if (field === "birth_year") {
+      setNameField(false);
+      setGenderField(false);
+      setIdField(false);
+      setMassField(false);
+      setHeightField(false);
+    } else if (field === "mass") {
+      setNameField(false);
+      setGenderField(false);
+      setBirthField(false);
+      setIdField(false);
+      setHeightField(false);
+    } else {
+      setNameField(false);
+      setGenderField(false);
+      setBirthField(false);
+      setMassField(false);
+      setIdField(false);
     }
   };
 
@@ -33,47 +72,51 @@ const OrderPeople: React.FC<{
     if (field === "id") {
       if (sortDirection === "asc") {
         setIdField(true);
+        setBackTheRest(field);
       } else {
         setIdField(false);
+        setBackTheRest(field);
       }
     } else if (field === "name") {
       if (sortDirection === "asc") {
         setNameField(true);
+        setBackTheRest(field);
       } else {
         setNameField(false);
+        setBackTheRest(field);
       }
     } else if (field === "gender") {
       if (sortDirection === "asc") {
         setGenderField(true);
+        setBackTheRest(field);
       } else {
         setGenderField(false);
+        setBackTheRest(field);
       }
     } else if (field === "birth_year") {
       if (sortDirection === "asc") {
         setBirthField(true);
+        setBackTheRest(field);
       } else {
         setBirthField(false);
+        setBackTheRest(field);
       }
     } else if (field === "mass") {
       if (sortDirection === "asc") {
         setMassField(true);
+        setBackTheRest(field);
       } else {
         setMassField(false);
+        setBackTheRest(field);
       }
     } else if (field === "height") {
       if (sortDirection === "asc") {
         setHeightField(true);
+        setBackTheRest(field);
       } else {
         setHeightField(false);
+        setBackTheRest(field);
       }
-    }
-  };
-
-  const setDirection = () => {
-    if (sortDirection === "asc") {
-      return true;
-    } else {
-      return false;
     }
   };
 
@@ -110,7 +153,7 @@ const OrderPeople: React.FC<{
         }
       }
     });
-    console.log(sortedItems);
+
     props.onOrderChange(sortedItems);
   }, [sortDirection, sortField]);
 

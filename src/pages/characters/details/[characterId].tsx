@@ -74,8 +74,6 @@ function CharacterDetails({
 }) {
   const router = useRouter();
   const app = initFirebase();
-  const auth = getAuth();
-  const [user, loading] = useAuthState(auth);
   const userAuthCtx = useContext(UserAuthContext);
   const { characterId } = router.query;
 
@@ -85,23 +83,62 @@ function CharacterDetails({
     }
   }, [userAuthCtx.loggedIn]);
 
+  const onBackHandler = () => {
+    router.push("/characters/1");
+  };
+
   if (!userAuthCtx.loggedIn) {
     return <p>404 - Not found</p>;
   }
   return (
-    <div>
-      <p>Details</p>
-      <p>{person.name}</p>
-      <p>{person.birth_year}</p>
-      <p>{person.eye_color}</p>
-      {films.map((film: Films) => (
-        <p key={film.title}>{film.title}</p>
-      ))}
-      <p>{person.gender}</p>
-      <p>{person.hair_color}</p>
-      <p>{person.height}</p>
-      <p>{person.mass}</p>
-      <p>{person.skin_color}</p>
+    <div className="p-4">
+      <p className="p-1">Details</p>
+      <p className="p-1">
+        <span className="text-slate-700">Name: </span>
+        <span>{person.name}</span>
+      </p>
+      <p className="p-1">
+        <span className="text-slate-700">Birth Year: </span>
+        <span>{person.birth_year}</span>
+      </p>
+      <p className="p-1">
+        <span className="text-slate-700">Eye color: </span>
+        <span>{person.eye_color}</span>
+      </p>
+      <div className="p-1">
+        <span className="text-slate-700">Movies: </span>
+        {films.map((film: Films) => (
+          <span className="pl-2 pr-2 m-2 border border-" key={film.title}>
+            {film.title}
+          </span>
+        ))}
+      </div>
+      <p className="p-1">
+        <span className="text-slate-700">Gender: </span>
+        <span>{person.gender}</span>
+      </p>
+      <p className="p-1">
+        <span className="text-slate-700">Hair color: </span>
+        <span>{person.hair_color}</span>
+      </p>
+      <p className="p-1">
+        <span className="text-slate-700">Height: </span>
+        <span>{person.height} cm</span>
+      </p>
+      <p className="p-1">
+        <span className="text-slate-700">Mass: </span>
+        <span>{person.mass} kg</span>
+      </p>
+      <p className="p-1">
+        <span className="text-slate-700">Skin color: </span>
+        <span>{person.skin_color}</span>
+      </p>
+      <button
+        className="mt-2 w-fit inline-block border-2 border-black rounded-lg p-1 active:bg-sky-200"
+        onClick={onBackHandler}
+      >
+        Back
+      </button>
     </div>
   );
 }

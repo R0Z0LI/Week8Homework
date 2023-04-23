@@ -15,14 +15,13 @@ const SearcPeople: React.FC<{
       `https://swapi.dev/api/people/?search=${searchTerm}`
     );
     const data = await res.json();
-    const results = data.results.map((person: PeopleData) => ({
-      id: person.id,
-      name: person.name,
-      gender: person.gender,
-      birth_year: person.birth_year,
-      mass: person.mass,
-      height: person.height,
-    }));
+    const results = data.results.map((person: PeopleData) => {
+      const matchedPerson = props.items.find((p) => p.name === person.name);
+      return {
+        ...person,
+        id: matchedPerson ? matchedPerson.id : null,
+      };
+    });
     setSearchResults(results);
     props.onSearch(results);
   }, 500);

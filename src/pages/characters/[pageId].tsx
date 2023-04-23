@@ -54,9 +54,10 @@ function CharactersPage({
   const app = initFirebase();
   const auth = getAuth();
   const [currentPage, setCurrentPage] = useState(pageId);
-  const [user, loading] = useAuthState(auth);
   const router = useRouter();
   const userAuthCtx = useContext(UserAuthContext);
+  const [loading, setLoading] = useState(false);
+  const [detailsLoading, setDetailsLoading] = useState(false);
 
   useEffect(() => {
     if (!userAuthCtx.loggedIn) {
@@ -64,8 +65,13 @@ function CharactersPage({
     }
   }, [userAuthCtx.loggedIn]);
 
+  useEffect(() => {
+    setLoading(false);
+  }, [people, detailsLoading]);
+
   const onChange = (event: ChangeEvent<unknown>, page: number) => {
     setCurrentPage(page);
+    setLoading(true);
     router.push(`/characters/${page}`);
   };
 
@@ -75,22 +81,34 @@ function CharactersPage({
     router.push("/");
   };
 
+  const onLoadingChangeHandler = (loading: boolean) => {
+    setDetailsLoading(loading);
+  };
+
+  console.log(detailsLoading);
+
   return (
     <div>
-      <button
-        className="m-2 w-fit inline-block border-2 border-black rounded-lg ml-4 p-1 active:bg-sky-200"
-        onClick={onSignOutHandler}
-      >
-        Sign out
-      </button>
-      {people && <PeopleList items={people} />}
-      {loading && <div>Loading...</div>}
-      <Pagination
-        count={9}
-        className="flex justify-center p-2"
-        page={pageId}
-        onChange={onChange}
-      />
+      {(!loading || !detailsLoading) && (
+        <button
+          className="m-2 w-fit inline-block border-2 border-black rounded-lg ml-4 p-1 active:bg-sky-200"
+          onClick={onSignOutHandler}
+        >
+          Sign out
+        </button>
+      )}
+      {(!loading || !detailsLoading) && people && (
+        <PeopleList items={people} onLoadingChange={onLoadingChangeHandler} />
+      )}
+      {(!loading || !detailsLoading) && (
+        <Pagination
+          count={9}
+          className="flex justify-center p-2"
+          page={pageId}
+          onChange={onChange}
+        />
+      )}
+      {loading && <div className="p-2">Loading...</div>}
     </div>
   );
 }

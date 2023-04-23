@@ -4,7 +4,10 @@ import SearcPeople from "./SearchPeople";
 import { useEffect, useState } from "react";
 import OrderPeople from "./OrderPeople";
 
-const PeopleList: React.FC<{ items: PeopleData[] }> = (props) => {
+const PeopleList: React.FC<{
+  items: PeopleData[];
+  onLoadingChange: (loading: boolean) => void;
+}> = (props) => {
   const [filteredPeople, setFilteredPeople] = useState<PeopleData[]>(
     props.items
   );
@@ -18,6 +21,9 @@ const PeopleList: React.FC<{ items: PeopleData[] }> = (props) => {
 
   const onOrderChangeHandler = (orderedPeople: PeopleData[]) => {
     setFilteredPeople(orderedPeople);
+  };
+  const onLoadingChangeHandler = (loading: boolean) => {
+    props.onLoadingChange(loading);
   };
   return (
     <div>
@@ -37,6 +43,7 @@ const PeopleList: React.FC<{ items: PeopleData[] }> = (props) => {
               birth_year={item.birth_year}
               mass={item.mass}
               height={item.height}
+              onLoadingChange={onLoadingChangeHandler}
             />
           ))}
         </ul>
