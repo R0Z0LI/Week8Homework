@@ -41,7 +41,7 @@ export const getServerSideProps = async (context: Context) => {
   const data = await res.json();
   const people = await data.results.map(
     (person: PeopleData, index: number) => ({
-      id: index,
+      id: +pageId * 10 - 10 + index,
       name: person.name,
       gender: person.gender,
       birth_year: person.birth_year,
