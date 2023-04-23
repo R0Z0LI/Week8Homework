@@ -1,7 +1,8 @@
 import { PeopleData } from "@/pages/characters/[pageId]";
 import PeopleItem from "./PeopleItem";
 import SearcPeople from "./SearchPeople";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import OrderPeople from "./OrderPeople";
 
 const PeopleList: React.FC<{ items: PeopleData[] }> = (props) => {
   const [filteredPeople, setFilteredPeople] = useState<PeopleData[]>(
@@ -10,27 +11,36 @@ const PeopleList: React.FC<{ items: PeopleData[] }> = (props) => {
   const handleSearch = (filteredPeople: PeopleData[]) => {
     setFilteredPeople(filteredPeople);
   };
-  console.log(filteredPeople);
+
+  useEffect(() => {
+    setFilteredPeople(props.items);
+  }, [props.items]);
+
+  const onOrderChangeHandler = (orderedPeople: PeopleData[]) => {
+    setFilteredPeople(orderedPeople);
+  };
   return (
     <div>
       <SearcPeople items={props.items} onSearch={handleSearch} />
-      <ul>
-        <li>
-          <span>Id </span>
-          <span>Name </span>
-          <span>Gender </span>
-          <span>Birth Year</span>
-        </li>
-        {filteredPeople.map((item) => (
-          <PeopleItem
-            key={item.name}
-            id={item.id + 1}
-            name={item.name}
-            gender={item.gender}
-            birth_year={item.birth_year}
+      <div>
+        <ul>
+          <OrderPeople
+            items={filteredPeople}
+            onOrderChange={onOrderChangeHandler}
           />
-        ))}
-      </ul>
+          {filteredPeople.map((item) => (
+            <PeopleItem
+              key={item.name}
+              id={item.id + 1}
+              name={item.name}
+              gender={item.gender}
+              birth_year={item.birth_year}
+              mass={item.mass}
+              height={item.height}
+            />
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

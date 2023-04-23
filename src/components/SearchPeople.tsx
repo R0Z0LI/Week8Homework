@@ -16,9 +16,12 @@ const SearcPeople: React.FC<{
     );
     const data = await res.json();
     const results = data.results.map((person: PeopleData) => ({
+      id: person.id,
       name: person.name,
       gender: person.gender,
       birth_year: person.birth_year,
+      mass: person.mass,
+      height: person.height,
     }));
     setSearchResults(results);
     props.onSearch(results);

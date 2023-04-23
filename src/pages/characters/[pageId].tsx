@@ -11,22 +11,8 @@ export interface PeopleData {
   name: string;
   gender: string;
   birth_year: string;
-}
-
-interface Person {
-  name: string;
-  height: string;
   mass: string;
-  hair_color: string;
-  skin_color: string;
-  eye_color: string;
-  birth_year: string;
-  gender: string;
-  homeworld: string;
-  films: string[];
-  species: string[];
-  vehicles: string[];
-  starships: string[];
+  height: string;
 }
 
 interface Context {
@@ -45,6 +31,8 @@ export const getServerSideProps = async (context: Context) => {
       name: person.name,
       gender: person.gender,
       birth_year: person.birth_year,
+      mass: person.mass,
+      height: person.height,
     })
   );
   return {
