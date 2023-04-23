@@ -14,6 +14,7 @@ function HomePage() {
   const [clicked, setClicked] = useState(false);
   const auth = getAuth();
   const [user, loading] = useAuthState(auth);
+  const [successfulRegistration, setSuccessfulRegistration] = useState(false);
   const router = useRouter();
   const userAuthCtx = useContext(UserAuthContext);
 
@@ -38,7 +39,10 @@ function HomePage() {
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           const user = userCredential.user;
-          //userAuthCtx.setLoggedIn(true);
+          setSuccessfulRegistration(true);
+          setTimeout(() => {
+            setSuccessfulRegistration(false);
+          }, 3000);
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -48,6 +52,7 @@ function HomePage() {
       signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           const user = userCredential.user;
+
           userAuthCtx.setLoggedIn(true);
         })
         .catch((error) => {
@@ -59,11 +64,18 @@ function HomePage() {
 
   return (
     <div>
-      {clicked ? <p>Register</p> : <p>Sign in</p>}
+      <div className="pt-3 pl-4">
+        {clicked ? <p>Registration</p> : <p>Signing in</p>}
+      </div>
       <Authentication onSubmit={onSubmitHandler} />
+      {successfulRegistration && (
+        <p className="pl-4 p-1 text-red-600">Successful Registration</p>
+      )}
       {loading && <div>Loading...</div>}
-      {clicked && <button onClick={onClickHandler}>Sign In</button>}
-      {!clicked && <button onClick={onClickHandler}>Create Account</button>}
+      <div className="w-fit inline-block border-2 border-black rounded-lg ml-4 p-1 active:bg-sky-200">
+        {clicked && <button onClick={onClickHandler}>Sign In</button>}
+        {!clicked && <button onClick={onClickHandler}>Create Account</button>}
+      </div>
     </div>
   );
 }

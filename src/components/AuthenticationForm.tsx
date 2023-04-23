@@ -21,9 +21,11 @@ const Authentication: React.FC<{
     <div>
       <form className="p-2" onSubmit={onSubmitHandler}>
         <div className="flex flex-col p-2">
-          <label htmlFor="name">Email</label>
+          <label htmlFor="name" className="pb-1">
+            Email
+          </label>
           <input
-            className="border-2 border-black"
+            className="border-2 border-black w-60 rounded-lg p-1 focus:bg-sky-200"
             type="email"
             required
             id="name"
@@ -31,16 +33,20 @@ const Authentication: React.FC<{
           />
         </div>
         <div className="flex flex-col p-2">
-          <label htmlFor="email">Password</label>
+          <label htmlFor="email" className="pb-1">
+            Password
+          </label>
           <input
-            className="border-2 border-black"
+            className="border-2 border-black w-60 rounded-lg p-1 focus:bg-sky-200"
             type="password"
             required
             id="email"
             ref={passwordInputRef}
           />
         </div>
-        <button className="border-2 border-black m-2 p-1">Submit</button>
+        <button className="border-2 border-black rounded-lg m-2 p-1 active:bg-sky-200">
+          Submit
+        </button>
       </form>
     </div>
   );

@@ -1,6 +1,6 @@
 import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useRouter, withRouter } from "next/router";
+import { useRouter } from "next/router";
 import UserAuthContext from "@/store/user-auth";
 import { initFirebase } from "@/firebase/Authentication";
 import { ChangeEvent, useContext, useEffect, useState } from "react";
@@ -58,6 +58,12 @@ function CharactersPage({
   const router = useRouter();
   const userAuthCtx = useContext(UserAuthContext);
 
+  useEffect(() => {
+    if (!userAuthCtx.loggedIn) {
+      router.push("/");
+    }
+  }, [userAuthCtx.loggedIn]);
+
   const onChange = (event: ChangeEvent<unknown>, page: number) => {
     setCurrentPage(page);
     router.push(`/characters/${page}`);
@@ -69,17 +75,17 @@ function CharactersPage({
     router.push("/");
   };
 
-  if (!userAuthCtx.loggedIn) {
-    if (typeof window === "undefined") return null;
-    router.push("/");
-  }
-
   return (
     <div>
+      <button onClick={onSignOutHandler}>Sign out</button>
       {people && <PeopleList items={people} />}
       {loading && <div>Loading...</div>}
-      <Pagination count={10} page={pageId} onChange={onChange} />
-      <button onClick={onSignOutHandler}>Sign out</button>
+      <Pagination
+        count={9}
+        className="flex justify-center p-2"
+        page={pageId}
+        onChange={onChange}
+      />
     </div>
   );
 }
