@@ -5,20 +5,32 @@ import { FaArrowCircleUp } from "@react-icons/all-files/fa/FaArrowCircleUp";
 
 type SortField = "id" | "name" | "gender" | "birth_year" | "mass" | "height";
 
+type SortState = Record<SortField, boolean>;
+
+const initialState: SortState = {
+  id: false,
+  name: false,
+  gender: false,
+  birth_year: false,
+  mass: false,
+  height: false,
+};
+
 const OrderPeople: React.FC<{
   items: PeopleData[];
   onOrderChange: (filteredPeople: PeopleData[]) => void;
 }> = (props) => {
   const [sortField, setSortField] = useState<SortField>("id");
-  const [idField, setIdField] = useState(false);
+  /*const [idField, setIdField] = useState(false);
   const [nameField, setNameField] = useState(false);
   const [genderField, setGenderField] = useState(false);
   const [birthField, setBirthField] = useState(false);
   const [massField, setMassField] = useState(false);
-  const [heightField, setHeightField] = useState(false);
+  const [heightField, setHeightField] = useState(false);*/
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+  const [sortState, setSortState] = useState<SortState>(initialState);
 
-  const handleSortClick = (field: string) => {
+  /*const handleSortClick = (field: string) => {
     if (sortField == field) {
       setSortDirection(sortDirection === "asc" ? "desc" : "asc");
     } else {
@@ -27,6 +39,8 @@ const OrderPeople: React.FC<{
     }
     setArrow(field);
   };
+
+  
 
   const setBackTheRest = (field: string) => {
     if (field === "id") {
@@ -118,6 +132,36 @@ const OrderPeople: React.FC<{
         setBackTheRest(field);
       }
     }
+  };*/
+
+  const handleSortClick = (field: SortField) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortField(field);
+      setSortDirection("asc");
+    }
+    setSortState((prevState) => {
+      const updatedState: SortState = { ...initialState };
+      updatedState[field] = true;
+      return updatedState;
+    });
+  };
+
+  const setBackTheRest = (field: SortField) => {
+    setSortState((prevState) => {
+      const updatedState: SortState = { ...initialState };
+      updatedState[field] = true;
+      return updatedState;
+    });
+  };
+
+  const setArrow = (field: SortField) => {
+    setSortState((prevState) => {
+      const updatedState: SortState = { ...initialState };
+      updatedState[field] = sortDirection === "asc";
+      return updatedState;
+    });
   };
 
   useEffect(() => {
@@ -166,13 +210,13 @@ const OrderPeople: React.FC<{
     <li className="p-3 grid gap-4 grid-cols-6 border-2 border-black">
       <div>
         <span className="p-1">Id</span>
-        {!idField && (
+        {!sortState.id && (
           <FaArrowCircleDown
             className="inline-block"
             onClick={() => handleSortClick("id")}
           />
         )}
-        {idField && (
+        {sortState.id && (
           <FaArrowCircleUp
             className="inline-block"
             onClick={() => handleSortClick("id")}
@@ -181,13 +225,13 @@ const OrderPeople: React.FC<{
       </div>
       <div>
         <span className="p-1">Name</span>
-        {!nameField && (
+        {!sortState.name && (
           <FaArrowCircleDown
             className="inline-block"
             onClick={() => handleSortClick("name")}
           />
         )}
-        {nameField && (
+        {sortState.name && (
           <FaArrowCircleUp
             className="inline-block"
             onClick={() => handleSortClick("name")}
@@ -196,13 +240,13 @@ const OrderPeople: React.FC<{
       </div>
       <div>
         <span className="p-1">Gender</span>
-        {!genderField && (
+        {!sortState.gender && (
           <FaArrowCircleDown
             className="inline-block"
             onClick={() => handleSortClick("gender")}
           />
         )}
-        {genderField && (
+        {sortState.gender && (
           <FaArrowCircleUp
             className="inline-block"
             onClick={() => handleSortClick("gender")}
@@ -211,13 +255,13 @@ const OrderPeople: React.FC<{
       </div>
       <div>
         <span className="p-1">Birth Year</span>
-        {!birthField && (
+        {!sortState.birth_year && (
           <FaArrowCircleDown
             className="inline-block"
             onClick={() => handleSortClick("birth_year")}
           />
         )}
-        {birthField && (
+        {sortState.birth_year && (
           <FaArrowCircleUp
             className="inline-block"
             onClick={() => handleSortClick("birth_year")}
@@ -226,13 +270,13 @@ const OrderPeople: React.FC<{
       </div>
       <div>
         <span className="p-1">Mass</span>
-        {!massField && (
+        {!sortState.mass && (
           <FaArrowCircleDown
             className="inline-block"
             onClick={() => handleSortClick("mass")}
           />
         )}
-        {massField && (
+        {sortState.mass && (
           <FaArrowCircleUp
             className="inline-block"
             onClick={() => handleSortClick("mass")}
@@ -241,13 +285,13 @@ const OrderPeople: React.FC<{
       </div>
       <div>
         <span className="p-1">Height</span>
-        {!heightField && (
+        {!sortState.height && (
           <FaArrowCircleDown
             className="inline-block"
             onClick={() => handleSortClick("height")}
           />
         )}
-        {heightField && "desc" && (
+        {sortState.height && "desc" && (
           <FaArrowCircleUp
             className="inline-block"
             onClick={() => handleSortClick("height")}
