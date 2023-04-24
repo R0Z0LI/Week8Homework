@@ -46,7 +46,6 @@ interface Context {
 
 export const getServerSideProps = async (context: Context) => {
   const { characterId } = context.params;
-  console.log("charId", characterId);
   const res = await fetch(`https://swapi.dev/api/people/${characterId}`);
   const person: Person = await res.json();
   const filmsAPI = person.films;

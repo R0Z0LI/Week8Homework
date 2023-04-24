@@ -85,8 +85,6 @@ function CharactersPage({
     setDetailsLoading(loading);
   };
 
-  console.log(detailsLoading);
-
   return (
     <div>
       {(!loading || !detailsLoading) && (
