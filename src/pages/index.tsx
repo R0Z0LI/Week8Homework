@@ -9,6 +9,7 @@ import {
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
 import UserAuthContext from "@/store/user-auth";
+import axios from "axios";
 function HomePage() {
   const app = initFirebase();
   const [clicked, setClicked] = useState(false);
@@ -39,29 +40,36 @@ function HomePage() {
 
   const onSubmitHandler = (email: string, password: string) => {
     if (clicked) {
-      createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          const user = userCredential.user;
-          setSuccessfulRegistration(true);
-          setTimeout(() => {
-            setSuccessfulRegistration(false);
-          }, 3000);
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-        });
+      const user = createAccount(email, password);
     } else {
-      signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          const user = userCredential.user;
+      login(email, password);
+    }
+  };
 
-          userAuthCtx.setLoggedIn(true);
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-        });
+  const createAccount = async (email: string, password: string) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/auth/createAccount",
+        {
+          email,
+          password,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const login = async (email: string, password: string) => {
+    try {
+      const response = await axios.post("http://localhost:5000/auth/login", {
+        email,
+        password,
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
     }
   };
 
