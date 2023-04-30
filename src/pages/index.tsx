@@ -1,5 +1,4 @@
 import Authentication from "@/components/AuthenticationForm";
-import { initFirebase } from "@/firebase/Authentication";
 import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import UserAuthContext from "@/store/user-auth";
@@ -7,9 +6,9 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 function HomePage() {
-  const app = initFirebase();
   const [clicked, setClicked] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [exist, setExist] = useState(false);
   const [successfulRegistration, setSuccessfulRegistration] = useState(false);
   const router = useRouter();
   const userAuthCtx = useContext(UserAuthContext);
@@ -20,6 +19,13 @@ function HomePage() {
       setLoading(true);
     }
   }, [userAuthCtx.loggedIn]);
+  useEffect(() => {
+    if (exist === true) {
+      setTimeout(() => {
+        setExist(false);
+      }, 4000);
+    }
+  }, [exist]);
 
   const onClickHandler = () => {
     if (clicked) {
@@ -31,7 +37,7 @@ function HomePage() {
 
   const onSubmitHandler = (email: string, password: string) => {
     if (clicked) {
-      const user = createAccount(email, password);
+      createAccount(email, password);
     } else {
       login(email, password);
     }
@@ -46,7 +52,10 @@ function HomePage() {
           password,
         }
       );
-      return response.data;
+      console.log(response);
+      if (response.data === "") {
+        setExist(true);
+      }
     } catch (error) {
       throw error;
     }
@@ -74,7 +83,7 @@ function HomePage() {
           {clicked ? <p>Registration</p> : <p>Signing in</p>}
         </div>
       )}
-      {!loading && <Authentication onSubmit={onSubmitHandler} />}
+      {!loading && <Authentication onSubmit={onSubmitHandler} exist={exist} />}
       {successfulRegistration && !loading && (
         <p className="pl-4 p-1 text-red-600">Successful Registration</p>
       )}
