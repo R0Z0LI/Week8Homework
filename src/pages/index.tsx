@@ -1,27 +1,18 @@
 import Authentication from "@/components/AuthenticationForm";
 import { initFirebase } from "@/firebase/Authentication";
 import { useContext, useEffect, useState } from "react";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
 import UserAuthContext from "@/store/user-auth";
 import axios from "axios";
+import Cookies from "js-cookie";
+
 function HomePage() {
   const app = initFirebase();
   const [clicked, setClicked] = useState(false);
-  const auth = getAuth();
   const [loading, setLoading] = useState(false);
   const [successfulRegistration, setSuccessfulRegistration] = useState(false);
   const router = useRouter();
   const userAuthCtx = useContext(UserAuthContext);
-
-  if (!userAuthCtx) {
-    throw new Error("UserAuthContext not found");
-  }
 
   useEffect(() => {
     if (userAuthCtx.loggedIn) {
@@ -67,6 +58,9 @@ function HomePage() {
         email,
         password,
       });
+      const token = response.data.access_token;
+      Cookies.set("token", token);
+      userAuthCtx.setLoggedIn(true);
       return response.data;
     } catch (error) {
       throw error;
