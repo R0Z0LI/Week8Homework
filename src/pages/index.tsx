@@ -8,7 +8,6 @@ import Cookies from "js-cookie";
 function HomePage() {
   const [clicked, setClicked] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [exist, setExist] = useState(false);
   const [successfulRegistration, setSuccessfulRegistration] = useState(false);
   const router = useRouter();
   const userAuthCtx = useContext(UserAuthContext);
@@ -19,13 +18,6 @@ function HomePage() {
       setLoading(true);
     }
   }, [userAuthCtx.loggedIn]);
-  useEffect(() => {
-    if (exist === true) {
-      setTimeout(() => {
-        setExist(false);
-      }, 4000);
-    }
-  }, [exist]);
 
   const onClickHandler = () => {
     if (clicked) {
@@ -52,10 +44,6 @@ function HomePage() {
           password,
         }
       );
-      console.log(response);
-      if (response.data === "") {
-        setExist(true);
-      }
     } catch (error) {
       throw error;
     }
@@ -83,7 +71,7 @@ function HomePage() {
           {clicked ? <p>Registration</p> : <p>Signing in</p>}
         </div>
       )}
-      {!loading && <Authentication onSubmit={onSubmitHandler} exist={exist} />}
+      {!loading && <Authentication onSubmit={onSubmitHandler} />}
       {successfulRegistration && !loading && (
         <p className="pl-4 p-1 text-red-600">Successful Registration</p>
       )}

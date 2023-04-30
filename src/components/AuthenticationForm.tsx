@@ -2,7 +2,6 @@ import { useRef, useEffect, useState } from "react";
 
 const Authentication: React.FC<{
   onSubmit: (email: string, password: string) => void;
-  exist: Boolean;
 }> = (props) => {
   const passwordInputRef = useRef<HTMLInputElement>(null);
   const emailInputRef = useRef<HTMLInputElement>(null);
@@ -32,9 +31,6 @@ const Authentication: React.FC<{
             id="name"
             ref={emailInputRef}
           />
-          {props.exist === true && (
-            <p className="text-orange-700">This email is already in use</p>
-          )}
         </div>
         <div className="flex flex-col p-2">
           <label htmlFor="email" className="pb-1">
